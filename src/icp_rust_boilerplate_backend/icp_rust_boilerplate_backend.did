@@ -1,0 +1,37 @@
+type Error = variant {
+  InvalidInput : record { msg : text };
+  NotFound : record { msg : text };
+};
+type LeaseAgreement = record {
+  id : nat64;
+  end_date : nat64;
+  tenant_id : nat64;
+  start_date : nat64;
+  property_id : nat64;
+};
+type Property = record {
+  id : nat64;
+  description : text;
+  address : text;
+  property_type : PropertyType;
+};
+type PropertyType = variant { Commercial; House; Apartment };
+type Result = variant { Ok : Property; Err : Error };
+type Result_1 = variant { Ok : Tenant; Err : Error };
+type Result_2 = variant { Ok; Err : Error };
+type Result_3 = variant { Ok : LeaseAgreement; Err : Error };
+type Tenant = record { id : nat64; name : text };
+service : {
+  add_property : (text, PropertyType, text) -> (Result);
+  add_tenant : (text) -> (Result_1);
+  cancel_lease_agreement : (nat64) -> (Result_2);
+  create_lease_agreement : (nat64, nat64, nat64, nat64) -> (Result_3);
+  delete_property : (nat64) -> (Result_2);
+  delete_tenant : (nat64) -> (Result_2);
+  get_lease_agreement : (nat64) -> (Result_3) query;
+  get_property : (nat64) -> (Result) query;
+  get_tenant : (nat64) -> (Result_1) query;
+  update_lease_agreement : (nat64, nat64, nat64, nat64, nat64) -> (Result_3);
+  update_property : (nat64, text, PropertyType, text) -> (Result);
+  update_tenant : (nat64, text) -> (Result_1);
+}
